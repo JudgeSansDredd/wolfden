@@ -33,7 +33,7 @@ export default function Dashboard(props: DashboardProps) {
 
     return (
         <>
-            <Head title={props.title} />
+            <Head title="Dashboard" />
             <div
                 className={`w-screen h-screen ${
                     status.attacking

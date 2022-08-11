@@ -47,6 +47,8 @@ export default function Login({ status, canResetPassword }: PropType) {
                 </div>
             )}
 
+            <div className="mb-4 text-xl">Wolf Den Login</div>
+
             <form onSubmit={submit}>
                 <div>
                     <Label
