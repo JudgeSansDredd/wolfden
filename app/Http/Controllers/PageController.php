@@ -12,8 +12,8 @@ class PageController extends Controller
         return Inertia::render('Dashboard', ['title' => 'Dashboard', 'roundNumber' => 1]);
     }
 
-    public function startWolfAttack(Request $request) {
-        WolfAttackEvent::dispatch(true);
-        return response('Ok', 200);
+    public function controlPanel(Request $request) {
+        return Inertia::render('ControlPanel', ['title' => 'Control Panel', 'roundNumber' => 1]);
     }
+
 }

@@ -4,3 +4,4 @@ interface RequiredPageProps {
 }
 
 export type DashboardProps = RequiredPageProps;
+export type ControlPanelProps = RequiredPageProps;

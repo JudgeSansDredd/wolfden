@@ -16,6 +16,14 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', [PageController::class, 'dashboard']);
+// Route::get('/login', function() {
+//     return "This is a login page";
+// })->name('login');
 
-// Route::post('/wa', [PageController::class, 'startWolfAtttack']);
+Route::get('/', [PageController::class, 'dashboard'])->name('dashboard');
+
+Route::middleware('auth')->group(function() {
+    Route::get('/controlpanel', [PageController::class, 'controlPanel'])->name('controlPanel');
+});
+
+require __DIR__.'/auth.php';

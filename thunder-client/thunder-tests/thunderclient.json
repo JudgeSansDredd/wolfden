@@ -1,16 +1,50 @@
 [
   {
     "_id": "da9feca1-f8cd-4f4f-bf69-e5fb1ad72997",
-    "colId": "57d02057-2d37-4121-9926-dd9d855482e9",
+    "colId": "c8647cb2-d9ce-4e6a-b8af-46e002cc4e4b",
     "containerId": "",
     "name": "Start Wolf Attack",
-    "url": "http://127.0.0.1:8000/api/wa",
+    "url": "{{base_url}}/wa",
+    "method": "POST",
+    "sortNum": 5000,
+    "created": "2022-08-11T02:53:54.272Z",
+    "modified": "2022-08-11T14:52:18.579Z",
+    "headers": [
+      {
+        "name": "Accept",
+        "value": "application/json"
+      }
+    ],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"attacking\": true\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "1f3f8388-8835-4b14-9972-eea2f1060d99",
+    "colId": "c8647cb2-d9ce-4e6a-b8af-46e002cc4e4b",
+    "containerId": "",
+    "name": "End Wolf Attack",
+    "url": "{{base_url}}/wa",
     "method": "POST",
     "sortNum": 10000,
-    "created": "2022-08-11T02:53:54.272Z",
-    "modified": "2022-08-11T02:56:21.989Z",
-    "headers": [],
+    "created": "2022-08-11T14:24:26.555Z",
+    "modified": "2022-08-11T14:53:18.181Z",
+    "headers": [
+      {
+        "name": "Accept",
+        "value": "application/json"
+      }
+    ],
     "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n  \"attacking\": false\n}",
+      "form": []
+    },
     "tests": []
   }
 ]
