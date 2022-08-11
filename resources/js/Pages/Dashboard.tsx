@@ -1,7 +1,7 @@
 import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
 import React, { useState } from "react";
-import { UpdateGameStateType } from "../Types/GameTypes";
+import { UpdateGameType } from "../Types/GameTypes";
 import { DashboardProps } from "../Types/PropTypes";
 
 export default function Dashboard(props: DashboardProps) {
@@ -23,7 +23,7 @@ export default function Dashboard(props: DashboardProps) {
 
     echo.channel("wolf.den.channel").listen(
         "WolfAttackEvent",
-        (e: UpdateGameStateType) => {
+        (e: UpdateGameType) => {
             console.log(e);
             setStatus((prev) => {
                 return { ...prev, ...e };

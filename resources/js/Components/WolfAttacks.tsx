@@ -13,24 +13,26 @@ export default function WolfAttacks() {
     return (
         <div>
             <Label className="" children="" forInput="" value="Wolf Attacks" />
-            <Button
-                type="button"
-                className="mx-1 bg-red-400 active:bg-red-900"
-                processing={false}
-                onClick={doWolfAttack}
-                id="start-wolf-attack"
-            >
-                Start Wolf Attack
-            </Button>
-            <Button
-                type="button"
-                className="mx-1"
-                processing={false}
-                onClick={doWolfAttack}
-                id="end-wolf-attack"
-            >
-                End Wolf Attack
-            </Button>
+            <div className="flex justify-around">
+                <Button
+                    type="button"
+                    className=""
+                    processing={false}
+                    onClick={doWolfAttack}
+                    id="start-wolf-attack"
+                >
+                    Start Wolf Attack
+                </Button>
+                <Button
+                    type="button"
+                    className="mx-1"
+                    processing={false}
+                    onClick={doWolfAttack}
+                    id="end-wolf-attack"
+                >
+                    End Wolf Attack
+                </Button>
+            </div>
         </div>
     );
 }

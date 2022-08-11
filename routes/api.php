@@ -22,5 +22,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth')->group(function() {
     Route::post('/wa', [APIController::class, 'wolfAttack'])->name('wolf-attack');
+    Route::post('/start-new-game', [APIController::class, 'startNewGame'])->name('post-start-new-game');
 });
 

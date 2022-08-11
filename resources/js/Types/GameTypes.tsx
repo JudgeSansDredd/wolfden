@@ -1,5 +1,8 @@
-export interface GameStateType {
+export interface GameType {
+    id: number;
     attacking: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
-export type UpdateGameStateType = Partial<GameStateType>;
+export type UpdateGameType = Partial<GameType>;

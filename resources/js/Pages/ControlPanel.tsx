@@ -2,7 +2,7 @@ import { Inertia } from "@inertiajs/inertia";
 import { Head } from "@inertiajs/inertia-react";
 import axios from "axios";
 import React, { MouseEvent } from "react";
-import Logout from "../Components/Logout";
+import Admin from "../Components/Admin";
 import WolfAttacks from "../Components/WolfAttacks";
 import Guest from "../Layouts/Guest";
 import { ControlPanelProps } from "../Types/PropTypes";
@@ -23,7 +23,7 @@ export default function ControlPanel(props: ControlPanelProps) {
         <Guest>
             <Head title="Control Panel" />
             <WolfAttacks />
-            <Logout />
+            <Admin />
         </Guest>
     );
 }

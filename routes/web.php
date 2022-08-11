@@ -23,7 +23,8 @@ use Inertia\Inertia;
 Route::get('/', [PageController::class, 'dashboard'])->name('dashboard');
 
 Route::middleware('auth')->group(function() {
-    Route::get('/controlpanel', [PageController::class, 'controlPanel'])->name('controlPanel');
+    Route::get('/controlpanel', [PageController::class, 'controlPanel'])->name('control-panel');
+    Route::get('/start-new-game', [PageController::class, 'startNewGame'])->name('get-start-new-game');
 });
 
 require __DIR__.'/auth.php';

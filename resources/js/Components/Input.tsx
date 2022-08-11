@@ -1,7 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+import React, { ChangeEvent, useEffect, useRef } from "react";
+
+interface PropType {
+    type: "text" | "password";
+    name: string;
+    value: string;
+    className: string;
+    autoComplete: string;
+    required: boolean;
+    isFocused: boolean;
+    handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    placeholder?: string;
+}
 
 export default function Input({
-    type = 'text',
+    type = "text",
     name,
     value,
     className,
@@ -9,11 +21,12 @@ export default function Input({
     required,
     isFocused,
     handleChange,
-}) {
-    const input = useRef();
+    placeholder,
+}: PropType) {
+    const input = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
-        if (isFocused) {
+        if (isFocused && input.current) {
             input.current.focus();
         }
     }, []);
@@ -32,6 +45,7 @@ export default function Input({
                 autoComplete={autoComplete}
                 required={required}
                 onChange={(e) => handleChange(e)}
+                placeholder={placeholder}
             />
         </div>
     );
