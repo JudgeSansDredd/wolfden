@@ -100,7 +100,7 @@ export default function Login({ status, canResetPassword }: PropType) {
                         </Link>
                     )}
 
-                    <Button className="ml-4" processing={processing}>
+                    <Button className="ml-4" disabled={processing}>
                         Log in
                     </Button>
                 </div>

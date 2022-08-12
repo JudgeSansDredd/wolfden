@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('rounds', function (Blueprint $table) {
             $table->id();
             $table->integer('round_number');
-            $table->integer('game_id');
-            $table->dateTime('ends_at');
+            $table->dateTime('action_time_ends_at');
+            $table->dateTime('team_time_ends_at');
             $table->timestamps();
         });
     }

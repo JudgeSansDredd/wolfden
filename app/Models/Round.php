@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,14 +12,15 @@ class Round extends Model
 
     protected $fillable = [
         'round_number',
-        'game_id',
-        'ends_at'
+        'action_time_ends_at',
+        'team_time_ends_at',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'ends_at' => 'datetime'
+        'action_time_ends_at' => 'datetime',
+        'team_time_ends_at' => 'datetime'
     ];
 
     public function game() {
@@ -27,5 +29,9 @@ class Round extends Model
 
     public function wolfAttacks() {
         return $this->hasMany(WolfAttack::class, 'round_id', 'id');
+    }
+
+    public function getResolvedAttribute() {
+        return Carbon::now() > $this->team_time_ends_at;
     }
 }

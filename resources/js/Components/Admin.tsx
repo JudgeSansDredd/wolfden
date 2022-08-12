@@ -16,7 +16,7 @@ export default function Admin() {
                 <Button
                     type="button"
                     className="mt-4 bg-red-600"
-                    processing={false}
+                    disabled={false}
                     id="start-new-game"
                 >
                     New Game
@@ -25,7 +25,7 @@ export default function Admin() {
             <Button
                 type="button"
                 className="mt-4"
-                processing={false}
+                disabled={false}
                 onClick={logout}
                 id="logout"
             >

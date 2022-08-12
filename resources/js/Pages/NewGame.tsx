@@ -44,14 +44,14 @@ export default function NewGame() {
                 <Link href={route("control-panel")}>
                     <Button
                         className="mt-2 bg-red-600 active:bg-red-900"
-                        processing={false}
+                        disabled={false}
                     >
                         Return to Control Panel
                     </Button>
                 </Link>
                 <Button
                     className="mt-2 bg-green-600 active:bg-green-900"
-                    processing={false}
+                    disabled={false}
                     onClick={submit}
                 >
                     Start New Game
