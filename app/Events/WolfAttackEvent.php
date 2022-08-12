@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\WolfAttack;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -12,16 +13,16 @@ class WolfAttackEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public bool $attacking;
+    public bool $attack;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(bool $attacking)
+    public function __construct(WolfAttack $attack)
     {
-        $this->attacking = $attacking;
+        $this->attack = $attack;
     }
 
     /**

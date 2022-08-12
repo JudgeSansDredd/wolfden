@@ -1,17 +1,18 @@
-interface GameType {
+export interface GameType {
     id: number;
     created_at: string;
     updated_at: string;
 }
 
-interface RoundType {
+export interface RoundType {
     id: number;
     game_id: number;
+    round_number: number;
     created_at: string;
     updated_at: string;
 }
 
-interface WolfAttackType {
+export interface AttackType {
     id: number;
     round_id: number;
     resolved: boolean;
@@ -19,4 +20,8 @@ interface WolfAttackType {
     updated_at: string;
 }
 
-export type UpdateGameType = Partial<GameType>;
+export interface GameStateType {
+    game: GameType | null;
+    round: RoundType | null;
+    attack: AttackType | null;
+}

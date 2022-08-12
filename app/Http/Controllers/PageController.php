@@ -5,20 +5,22 @@ namespace App\Http\Controllers;
 use App\Events\WolfAttackEvent;
 use App\Utils\GameUtils;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class PageController extends Controller
 {
     public function dashboard(Request $request) {
-        $game = GameUtils::getCurrentGame();
-        if(!$game) {
-            return "No game in database. Start a new game.";
-        }
-        return Inertia::render('Dashboard', ['roundNumber' => 1]);
+        $all = GameUtils::getCurrentAll();
+        return Inertia::render('Dashboard', $all);
     }
 
     public function controlPanel(Request $request) {
-        return Inertia::render('ControlPanel', ['roundNumber' => 1]);
+        $all = GameUtils::getCurrentAll();
+        if(empty($all['game'])) {
+            return redirect()->route('get-start-new-game');
+        }
+        return Inertia::render('ControlPanel', GameUtils::getCurrentAll());
     }
 
     public function startNewGame(Request $request) {

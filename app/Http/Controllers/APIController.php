@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\WolfAttackEvent;
 use App\Models\Game;
 use App\Models\Round;
+use App\Utils\GameUtils;
 use Illuminate\Http\Request;
 
 class APIController extends Controller
@@ -14,8 +15,22 @@ class APIController extends Controller
             'attacking' => 'required|boolean'
         ]);
         $attacking = $request->attacking;
-        WolfAttackEvent::dispatch($attacking);
-        return response()->json(compact('attacking'), 200);
+        extract(GameUtils::getCurrentAll());
+        if(!empty($attack) && !$attack->resolved && !$attacking) {
+            // Update attack with resolved
+            $attack->resolved = true;
+            $attack->save();
+        } elseif($attacking && (empty($attack) || $attack->resolved)) {
+            // Create new attack
+            $attack = $round->wolfAttacks()->create([]);
+        }
+
+        if($attack) {
+            WolfAttackEvent::dispatch($attack);
+            return response()->json(compact('attack'), 200);
+        } else {
+            return response("Invalid command", 400);
+        }
     }
 
     public function startNewGame(Request $request) {
@@ -27,7 +42,7 @@ class APIController extends Controller
 
         if($confirmation == 'start-new-game') {
             $game = Game::create();
-            return response()->json(compact('game'), 200);
+            return redirect()->route('control-panel');
         } else {
             return response('Confirmation not made', 400);
         }

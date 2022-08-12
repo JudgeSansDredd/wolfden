@@ -1,4 +1,5 @@
-import { Link } from "@inertiajs/inertia-react";
+import { Inertia } from "@inertiajs/inertia";
+import { Head, Link } from "@inertiajs/inertia-react";
 import React, { ChangeEvent, useState } from "react";
 import Button from "../Components/Button";
 import Input from "../Components/Input";
@@ -14,8 +15,13 @@ export default function NewGame() {
         setConfirmation(e.currentTarget.value);
     };
 
+    const submit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        Inertia.post(route("post-start-new-game"), { confirmation });
+    };
+
     return (
         <Guest>
+            <Head title="Start New Game" />
             <div className="text-3xl">Start a new game?</div>
             <Label
                 className=""
@@ -46,6 +52,7 @@ export default function NewGame() {
                 <Button
                     className="mt-2 bg-green-600 active:bg-green-900"
                     processing={false}
+                    onClick={submit}
                 >
                     Start New Game
                 </Button>

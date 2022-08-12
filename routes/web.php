@@ -25,6 +25,9 @@ Route::get('/', [PageController::class, 'dashboard'])->name('dashboard');
 Route::middleware('auth')->group(function() {
     Route::get('/controlpanel', [PageController::class, 'controlPanel'])->name('control-panel');
     Route::get('/start-new-game', [PageController::class, 'startNewGame'])->name('get-start-new-game');
+    Route::get('/cpanel', function() {
+        return redirect()->route('control-panel');
+    });
 });
 
 require __DIR__.'/auth.php';

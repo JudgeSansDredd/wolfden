@@ -3,16 +3,33 @@
 namespace App\Utils;
 
 use App\Models\Game;
+use App\Models\Round;
 
 class GameUtils {
 
-    public static function getCurrentGame() {
-        $game = Game::orderBy('created_at')->latest();
-        return !empty($game) ? $game : false;
+    private static function getCurrentGame() {
+        $game = Game::latest()->first();
+        return $game;
     }
 
-    public static function getCurrentRound(Game $game) {
-        $round = $game->rounds()->latest();
-        return !empty($round) ? $round : false;
+    private static function getCurrentRound(?Game $game) {
+        if(empty($game)) {
+            return null;
+        }
+        return $game->rounds()->latest()->first();
+    }
+
+    private static function getCurrentAttack(?Round $round) {
+        if(empty($round)) {
+            return null;
+        }
+        return $round->wolfAttacks()->latest()->first();
+    }
+
+    public static function getCurrentAll() {
+        $game = self::getCurrentGame();
+        $round = self::getCurrentRound($game);
+        $attack = self::getCurrentAttack($round);
+        return compact('game', 'round', 'attack');
     }
 }
