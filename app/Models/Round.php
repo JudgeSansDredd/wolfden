@@ -24,4 +24,8 @@ class Round extends Model
     public function game() {
         return $this->belongsTo(Game::class, 'game_id', 'id');
     }
+
+    public function wolfAttacks() {
+        return $this->hasMany(WolfAttack::class, 'round_id', 'id');
+    }
 }
