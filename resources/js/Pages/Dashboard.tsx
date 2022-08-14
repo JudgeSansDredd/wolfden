@@ -2,7 +2,7 @@ import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
 import React, { useState } from "react";
 import RoundTimer from "../Components/RoundTimer";
-import { AttackType, GameStateType } from "../Types/GameTypes";
+import { AttackType, GameStateType, RoundType } from "../Types/GameTypes";
 
 export default function Dashboard(props: GameStateType) {
     const [gameState, setGameState] = useState<GameStateType>(props);
@@ -15,7 +15,6 @@ export default function Dashboard(props: GameStateType) {
     // Set up echo to listen to web sockets
     const key = import.meta.env.VITE_PUSHER_APP_KEY;
     const wsHost = `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`;
-    console.log(key, wsHost);
     const echo = new Echo({
         broadcaster: "pusher",
         key,
@@ -26,14 +25,17 @@ export default function Dashboard(props: GameStateType) {
     });
 
     // Listen to the wolf den channel
-    echo.channel("wolf.den.channel").listen(
-        "WolfAttackEvent",
-        (e: { attack: AttackType }) => {
+    echo.channel("wolf.den.channel")
+        .listen("WolfAttackEvent", ({ attack }: { attack: AttackType }) => {
             setGameState((prev: GameStateType) => {
-                return { ...prev, ...e };
+                return { ...prev, attack };
             });
-        }
-    );
+        })
+        .listen("RoundEvent", ({ round }: { round: RoundType }) => {
+            setGameState((prev: GameStateType) => {
+                return { ...prev, round };
+            });
+        });
 
     return (
         <>

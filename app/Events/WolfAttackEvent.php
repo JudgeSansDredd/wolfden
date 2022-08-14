@@ -13,7 +13,7 @@ class WolfAttackEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public bool $attack;
+    public WolfAttack $attack;
 
     /**
      * Create a new event instance.

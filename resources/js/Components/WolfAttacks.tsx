@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { MouseEvent } from "react";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import React, { MouseEvent, useState } from "react";
 import { AttackType } from "../Types/GameTypes";
 import Button from "./Button";
 
@@ -10,10 +10,22 @@ interface PropType {
 }
 export default function WolfAttacks({ attack, roundUnderway }: PropType) {
     const attackUnderway = (attack && !attack.resolved) || false;
+    const [errMessage, setErrMessage] = useState<string | null>(null);
 
-    const doWolfAttack = (e: MouseEvent<HTMLButtonElement>) => {
+    const doWolfAttack = (e: MouseEvent<HTMLButtonElement>): void => {
         const attacking = e.currentTarget.id === "start-wolf-attack";
-        axios.post(route("wolf-attack"), { attacking });
+        axios
+            .post(route("wolf-attack"), { attacking })
+            .then((res: AxiosResponse) => {
+                setErrMessage(null);
+            })
+            .catch((e: AxiosError) => {
+                if (e.response) {
+                    setErrMessage(e.response.data as string);
+                } else {
+                    setErrMessage(e.message);
+                }
+            });
     };
 
     let statusMessage: string;
@@ -46,7 +58,12 @@ export default function WolfAttacks({ attack, roundUnderway }: PropType) {
                 </Button>
             </div>
             <div className="flex items-center justify-center">
-                {statusMessage}
+                <div className="flex flex-col items-center justify-center">
+                    <div>{statusMessage}</div>
+                    <div className="text-center text-red-500 animate-pulse">
+                        {errMessage ?? ""}
+                    </div>
+                </div>
             </div>
         </div>
     );
