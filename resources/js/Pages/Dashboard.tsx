@@ -1,7 +1,8 @@
 import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
 import React, { useState } from "react";
-import RoundTimer from "../Components/RoundTimer";
+import ActionTimer from "../Components/ActionTimer";
+import TeamTimer from "../Components/TeamTimer";
 import {
     AttackType,
     GameStateType,
@@ -12,10 +13,6 @@ import {
 export default function Dashboard(props: GameStateType) {
     const [gameState, setGameState] = useState<GameStateType>(props);
     const { game, round, attack } = gameState;
-    if (!game || !round) {
-        return <div>The game has not started</div>;
-    }
-    const attacking = attack && !attack.resolved;
 
     // Set up echo to listen to web sockets
     const key = import.meta.env.VITE_PUSHER_APP_KEY;
@@ -47,6 +44,25 @@ export default function Dashboard(props: GameStateType) {
             });
         });
 
+    if (!game || !round) {
+        return <div>The game has not started</div>;
+    }
+    const attacking = attack && !attack.resolved;
+    const wolfAttack = (
+        <div
+            className={`${
+                attacking ? "" : "hidden"
+            } flex text-xl border-2 border-white border-solid rounded-full my-2 animate-pulse`}
+        >
+            <div className="p-2 text-center text-white text-red-700 bg-white rounded-l-full">
+                Wolf Attack
+            </div>
+            <div className="flex-grow p-2 text-center">
+                Combatants to battle stations. All others, shelter in place.
+            </div>
+        </div>
+    );
+
     return (
         <>
             <Head title="Dashboard" />
@@ -55,20 +71,13 @@ export default function Dashboard(props: GameStateType) {
                     attacking ? "bg-red-900 text-white" : "bg-white text-black"
                 }`}
             >
-                <div className="container mx-auto font-mono">
+                <div className="container flex flex-col h-full mx-auto font-mono">
                     <div className="w-full text-center text-8xl">{`It is round ${round.round_number}`}</div>
-                    <div
-                        className={`text-6xl text-center mt-16 ${
-                            attacking ? "" : "hidden"
-                        }`}
-                    >
-                        A Wolf Attack is Underway.
-                        <br />
-                        Combatants to battle stations.
-                        <br />
-                        All others, shelter in place.
+                    <ActionTimer round={round} />
+                    <TeamTimer round={round} />
+                    <div className="flex items-center justify-center flex-grow">
+                        {wolfAttack}
                     </div>
-                    <RoundTimer />
                 </div>
             </div>
         </>

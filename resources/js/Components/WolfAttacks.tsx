@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { MouseEvent, useState } from "react";
 import { AttackType } from "../Types/GameTypes";
+import { getErrorMessage } from "../Utils/functions";
 import Button from "./Button";
 
 declare function route(name: string): string;
@@ -20,11 +21,7 @@ export default function WolfAttacks({ attack, roundUnderway }: PropType) {
                 setErrMessage(null);
             })
             .catch((e: AxiosError) => {
-                if (e.response) {
-                    setErrMessage(e.response.data as string);
-                } else {
-                    setErrMessage(e.message);
-                }
+                setErrMessage(getErrorMessage(e));
             });
     };
 

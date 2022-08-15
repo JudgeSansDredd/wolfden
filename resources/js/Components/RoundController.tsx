@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { MouseEvent, useState } from "react";
 import { RoundType } from "../Types/GameTypes";
+import { getErrorMessage } from "../Utils/functions";
 import Button from "./Button";
 
 declare function route(name: string): string;
@@ -22,11 +23,7 @@ export default function RoundController({ round }: PropType) {
                     setErrMessage(null);
                 })
                 .catch((e: AxiosError) => {
-                    if (e.response) {
-                        setErrMessage(e.response.data as string);
-                    } else {
-                        setErrMessage(e.message);
-                    }
+                    setErrMessage(getErrorMessage(e));
                 });
         }
     };
@@ -43,15 +40,6 @@ export default function RoundController({ round }: PropType) {
                     id="start-new-round"
                 >
                     Start New Round
-                </Button>
-                <Button
-                    type="button"
-                    className="my-1"
-                    disabled={false}
-                    onClick={() => {}}
-                    id="restart-round"
-                >
-                    Restart Current Round
                 </Button>
             </div>
             <div className="flex flex-col justify-center items center">
