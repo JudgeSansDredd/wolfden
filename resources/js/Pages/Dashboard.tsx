@@ -32,19 +32,16 @@ export default function Dashboard(props: GameStateType) {
     // Listen to the wolf den channel
     echo.channel("wolf.den.channel")
         .listen("WolfAttackEvent", ({ attack }: { attack: AttackType }) => {
-            console.log(attack);
             setGameState((prev: GameStateType) => {
                 return { ...prev, attack };
             });
         })
         .listen("RoundEvent", ({ round }: { round: RoundType }) => {
-            console.log(round);
             setGameState((prev: GameStateType) => {
                 return { ...prev, round };
             });
         })
         .listen("GameEvent", ({ game }: { game: GameType }) => {
-            console.log(game);
             setGameState((prev: GameStateType) => {
                 return { ...prev, game };
             });
