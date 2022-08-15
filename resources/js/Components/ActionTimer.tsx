@@ -30,11 +30,11 @@ export default function ActionTimer({ round }: PropType) {
 
     return (
         <div
-            className={`flex my-2 text-xl border-2 border-blue-400 border-solid rounded-full ${
+            className={`flex my-2 text-xl border-2 border-yellow-500 border-solid rounded-full ${
                 timerState.visible ? "" : "hidden"
             }`}
         >
-            <div className="p-2 text-center text-white bg-blue-400 rounded-l-full">
+            <div className="p-2 text-center text-white bg-yellow-500 rounded-l-full">
                 Action Phase
             </div>
             <div className="flex-grow p-2 text-center">
