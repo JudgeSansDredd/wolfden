@@ -3,8 +3,8 @@
 namespace App\Events;
 
 use App\Models\Round;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
@@ -32,6 +32,6 @@ class RoundEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('wolf.den.channel');
+        return new Channel('wolf.den.channel');
     }
 }

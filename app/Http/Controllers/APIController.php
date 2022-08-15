@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\GameEvent;
+use App\Events\RoundEvent;
 use App\Events\WolfAttackEvent;
 use App\Models\Game;
 use App\Models\Round;
@@ -20,7 +22,8 @@ class APIController extends Controller
         $confirmation = $request->confirmation;
 
         if($confirmation == 'start-new-game') {
-            Game::create();
+            $game = Game::create();
+            GameEvent::dispatch($game);
             return redirect()->route('control-panel');
         } else {
             return response('Confirmation not made', 400);
@@ -36,7 +39,7 @@ class APIController extends Controller
             return response("No game to start round in ", 400);
         }
         if(!empty($round) && !$round->resolved) {
-            return response("Round $round->round_number in process", 400);
+            return response("Round $round->round_number in progress", 400);
         }
 
         $now = Carbon::now();
@@ -45,7 +48,7 @@ class APIController extends Controller
         $round_number = empty($round) ? 1 : $round->round_number + 1;
 
         $round = $game->rounds()->create(compact('round_number', 'action_time_ends_at', 'team_time_ends_at'));
-
+        RoundEvent::dispatch($round);
     }
 
     public function wolfAttack(Request $request) {

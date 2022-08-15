@@ -6,7 +6,12 @@ import Admin from "../Components/Admin";
 import RoundController from "../Components/RoundController";
 import WolfAttacks from "../Components/WolfAttacks";
 import Guest from "../Layouts/Guest";
-import { AttackType, GameStateType, RoundType } from "../Types/GameTypes";
+import {
+    AttackType,
+    GameStateType,
+    GameType,
+    RoundType,
+} from "../Types/GameTypes";
 
 declare function route(name: string): string;
 
@@ -37,8 +42,12 @@ export default function ControlPanel(props: GameStateType) {
             setGameState((prev: GameStateType) => {
                 return { ...prev, round };
             });
+        })
+        .listen("GameEvent", ({ game }: { game: GameType }) => {
+            setGameState((prev: GameStateType) => {
+                return { ...prev, game };
+            });
         });
-
     const roundUnderway = round
         ? DateTime.now() < DateTime.fromISO(round.action_time_ends_at)
         : false;

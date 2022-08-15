@@ -2,7 +2,12 @@ import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
 import React, { useState } from "react";
 import RoundTimer from "../Components/RoundTimer";
-import { AttackType, GameStateType, RoundType } from "../Types/GameTypes";
+import {
+    AttackType,
+    GameStateType,
+    GameType,
+    RoundType,
+} from "../Types/GameTypes";
 
 export default function Dashboard(props: GameStateType) {
     const [gameState, setGameState] = useState<GameStateType>(props);
@@ -27,13 +32,21 @@ export default function Dashboard(props: GameStateType) {
     // Listen to the wolf den channel
     echo.channel("wolf.den.channel")
         .listen("WolfAttackEvent", ({ attack }: { attack: AttackType }) => {
+            console.log(attack);
             setGameState((prev: GameStateType) => {
                 return { ...prev, attack };
             });
         })
         .listen("RoundEvent", ({ round }: { round: RoundType }) => {
+            console.log(round);
             setGameState((prev: GameStateType) => {
                 return { ...prev, round };
+            });
+        })
+        .listen("GameEvent", ({ game }: { game: GameType }) => {
+            console.log(game);
+            setGameState((prev: GameStateType) => {
+                return { ...prev, game };
             });
         });
 
