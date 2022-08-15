@@ -1,7 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
+import { DateTime } from "luxon";
 import React, { MouseEvent, useState } from "react";
 import { RoundType } from "../Types/GameTypes";
-import { getErrorMessage } from "../Utils/functions";
+import { getErrorMessage, getTimerString } from "../Utils/functions";
 import Button from "./Button";
 
 declare function route(name: string): string;
@@ -11,8 +12,29 @@ interface PropType {
 }
 
 export default function RoundController({ round }: PropType) {
-    const statusMessage = "A round or something?";
-    const [errMessage, setErrMessage] = useState<string | null>(null);
+    const dtActionTimeEndsAt = round
+        ? DateTime.fromISO(round.action_time_ends_at)
+        : null;
+    const dtTeamTimeEndsAt = round
+        ? DateTime.fromISO(round.team_time_ends_at)
+        : null;
+
+    const getStatusMessage = (): string => {
+        if (dtActionTimeEndsAt === null || dtTeamTimeEndsAt === null) {
+            return "Round has not started.";
+        } else if (DateTime.now() < dtActionTimeEndsAt) {
+            const remaining = getTimerString(dtActionTimeEndsAt);
+            return `Action Time Remaining: ${remaining}`;
+        } else {
+            const remaining = getTimerString(dtTeamTimeEndsAt);
+            return `Team Time Remaining: ${remaining}`;
+        }
+    };
+
+    const [roundState, setRoundState] = useState<{
+        errMessage: string | null;
+        statusMessage: string;
+    }>({ errMessage: null, statusMessage: getStatusMessage() });
 
     const startRound = (e: MouseEvent<HTMLButtonElement>): void => {
         const id = e.currentTarget.id;
@@ -20,13 +42,24 @@ export default function RoundController({ round }: PropType) {
             axios
                 .post(route("post-start-new-round"), {})
                 .then((res: AxiosResponse) => {
-                    setErrMessage(null);
+                    setRoundState((prev) => {
+                        return { ...prev, errMessage: null };
+                    });
                 })
                 .catch((e: AxiosError) => {
-                    setErrMessage(getErrorMessage(e));
+                    setRoundState((prev) => {
+                        return { ...prev, errMessage: getErrorMessage(e) };
+                    });
                 });
         }
     };
+
+    setInterval(() => {
+        const statusMessage = getStatusMessage();
+        setRoundState((prev) => {
+            return { ...prev, statusMessage };
+        });
+    }, 250);
 
     return (
         <div className="grid grid-cols-2 p-2 border-2 border-black rounded-t-lg">
@@ -44,10 +77,10 @@ export default function RoundController({ round }: PropType) {
             </div>
             <div className="flex flex-col justify-center items center">
                 <div className="flex items-center justify-center text-center">
-                    {statusMessage}
+                    {roundState.statusMessage}
                 </div>
                 <div className="text-center text-red-500 animate-pulse">
-                    {errMessage ?? ""}
+                    {roundState.errMessage ?? ""}
                 </div>
             </div>
         </div>
