@@ -11,6 +11,12 @@ interface PropType {
     round: RoundType | null;
 }
 
+interface StateType {
+    errMessage: string | null;
+    statusMessage: string;
+    roundComplete: boolean;
+}
+
 export default function RoundController({ round }: PropType) {
     const dtActionTimeEndsAt = round
         ? DateTime.fromISO(round.action_time_ends_at)
@@ -19,22 +25,11 @@ export default function RoundController({ round }: PropType) {
         ? DateTime.fromISO(round.team_time_ends_at)
         : null;
 
-    const getStatusMessage = (): string => {
-        if (dtActionTimeEndsAt === null || dtTeamTimeEndsAt === null) {
-            return "Round has not started.";
-        } else if (DateTime.now() < dtActionTimeEndsAt) {
-            const remaining = getTimerString(dtActionTimeEndsAt);
-            return `Action Time Remaining: ${remaining}`;
-        } else {
-            const remaining = getTimerString(dtTeamTimeEndsAt);
-            return `Team Time Remaining: ${remaining}`;
-        }
-    };
-
-    const [roundState, setRoundState] = useState<{
-        errMessage: string | null;
-        statusMessage: string;
-    }>({ errMessage: null, statusMessage: getStatusMessage() });
+    const [roundState, setRoundState] = useState<StateType>({
+        errMessage: null,
+        statusMessage: "",
+        roundComplete: false,
+    });
 
     const startRound = (e: MouseEvent<HTMLButtonElement>): void => {
         const id = e.currentTarget.id;
@@ -55,9 +50,25 @@ export default function RoundController({ round }: PropType) {
     };
 
     setInterval(() => {
-        const statusMessage = getStatusMessage();
+        let statusMessage: string;
+        let roundComplete: boolean;
+        if (dtActionTimeEndsAt === null || dtTeamTimeEndsAt === null) {
+            statusMessage = "Round has not started.";
+            roundComplete = true;
+        } else if (DateTime.now() < dtActionTimeEndsAt) {
+            const remaining = getTimerString(dtActionTimeEndsAt);
+            statusMessage = `Action Time Remaining: ${remaining}`;
+            roundComplete = false;
+        } else if (DateTime.now() < dtTeamTimeEndsAt) {
+            const remaining = getTimerString(dtTeamTimeEndsAt);
+            statusMessage = `Team Time Remaining: ${remaining}`;
+            roundComplete = false;
+        } else {
+            statusMessage = "Round is over. Start the next round.";
+            roundComplete = true;
+        }
         setRoundState((prev) => {
-            return { ...prev, statusMessage };
+            return { ...prev, statusMessage, roundComplete };
         });
     }, 250);
 
@@ -76,7 +87,13 @@ export default function RoundController({ round }: PropType) {
                 </Button>
             </div>
             <div className="flex flex-col justify-center items center">
-                <div className="flex items-center justify-center text-center">
+                <div
+                    className={`flex items-center justify-center text-center ${
+                        roundState.roundComplete
+                            ? "animate-pulse text-red-600"
+                            : ""
+                    }`}
+                >
                     {roundState.statusMessage}
                 </div>
                 <div className="text-center text-red-500 animate-pulse">
