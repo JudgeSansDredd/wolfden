@@ -1,7 +1,7 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { DateTime } from "luxon";
 import React, { MouseEvent, useState } from "react";
-import { RoundType } from "../Types/GameTypes";
+import { GameStateType, RoundType } from "../Types/GameTypes";
 import { getErrorMessage, getTimerString } from "../Utils/functions";
 import Button from "./Button";
 
@@ -9,6 +9,7 @@ declare function route(name: string): string;
 
 interface PropType {
     round: RoundType | null;
+    updateGameState: (e: Partial<GameStateType>) => void;
 }
 
 interface StateType {
