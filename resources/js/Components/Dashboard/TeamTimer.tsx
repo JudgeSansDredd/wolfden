@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RoundType } from "../../Types/GameTypes";
 import { getTimerString } from "../../Utils/functions";
 
@@ -7,7 +7,7 @@ interface PropType {
     round: RoundType;
 }
 
-export default function ActionTimer({ round }: PropType) {
+export default function TeamTimer({ round }: PropType) {
     const dtActionTimeEndsAt = DateTime.fromISO(round.action_time_ends_at);
     const dtTeamTimeEndsAt = DateTime.fromISO(round.team_time_ends_at);
     const getVisible = () => {
@@ -22,11 +22,15 @@ export default function ActionTimer({ round }: PropType) {
         visible: getVisible(),
     });
 
-    setInterval(() => {
-        const timerString = getTimerString(dtTeamTimeEndsAt);
-        const visible = getVisible();
-        setTimerState({ timerString, visible });
-    }, 250);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            const timerString = getTimerString(dtTeamTimeEndsAt);
+            const visible = getVisible();
+            setTimerState({ timerString, visible });
+        }, 250);
+
+        return () => clearInterval(interval);
+    }, [round]);
 
     return (
         <div

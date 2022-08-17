@@ -22,6 +22,9 @@ export default function WolfAttacks({ attack, roundUnderway }: PropType) {
             })
             .catch((e: AxiosError) => {
                 setErrMessage(getErrorMessage(e));
+                setTimeout(() => {
+                    setErrMessage(null);
+                }, 5000);
             });
     };
 

@@ -1,9 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { DateTime } from "luxon";
-import React, { MouseEvent, useState } from "react";
-import { RoundType } from "../Types/GameTypes";
-import { getErrorMessage, getTimerString } from "../Utils/functions";
-import Button from "./ControlPanel/Button";
+import React, { MouseEvent, useEffect, useState } from "react";
+import { RoundType } from "../../Types/GameTypes";
+import { getErrorMessage, getTimerString } from "../../Utils/functions";
+import Button from "../Common/Button";
 
 declare function route(name: string): string;
 
@@ -18,13 +18,6 @@ interface StateType {
 }
 
 export default function RoundController({ round }: PropType) {
-    const dtActionTimeEndsAt = round
-        ? DateTime.fromISO(round.action_time_ends_at)
-        : null;
-    const dtTeamTimeEndsAt = round
-        ? DateTime.fromISO(round.team_time_ends_at)
-        : null;
-
     const [roundState, setRoundState] = useState<StateType>({
         errMessage: null,
         statusMessage: "",
@@ -45,32 +38,50 @@ export default function RoundController({ round }: PropType) {
                     setRoundState((prev) => {
                         return { ...prev, errMessage: getErrorMessage(e) };
                     });
+                    setTimeout(() => {
+                        setRoundState((prev) => {
+                            return { ...prev, errMessage: "" };
+                        });
+                    }, 5000);
                 });
         }
     };
 
-    setInterval(() => {
-        let statusMessage: string;
-        let roundComplete: boolean;
-        if (dtActionTimeEndsAt === null || dtTeamTimeEndsAt === null) {
-            statusMessage = "Round has not started.";
-            roundComplete = true;
-        } else if (DateTime.now() < dtActionTimeEndsAt) {
-            const remaining = getTimerString(dtActionTimeEndsAt);
-            statusMessage = `Action Time Remaining: ${remaining}`;
-            roundComplete = false;
-        } else if (DateTime.now() < dtTeamTimeEndsAt) {
-            const remaining = getTimerString(dtTeamTimeEndsAt);
-            statusMessage = `Team Time Remaining: ${remaining}`;
-            roundComplete = false;
-        } else {
-            statusMessage = "Round is over. Start the next round.";
-            roundComplete = true;
-        }
-        setRoundState((prev) => {
-            return { ...prev, statusMessage, roundComplete };
-        });
-    }, 250);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            let statusMessage: string;
+            let roundComplete: boolean;
+            const dtActionTimeEndsAt = round
+                ? DateTime.fromISO(round.action_time_ends_at)
+                : null;
+            const dtTeamTimeEndsAt = round
+                ? DateTime.fromISO(round.team_time_ends_at)
+                : null;
+            if (!dtActionTimeEndsAt || !dtTeamTimeEndsAt) {
+                statusMessage = "Round has not started.";
+                roundComplete = true;
+            } else if (DateTime.now() < dtActionTimeEndsAt) {
+                const remaining = getTimerString(dtActionTimeEndsAt);
+                statusMessage = `Action Time Remaining: ${remaining}`;
+                roundComplete = false;
+            } else if (DateTime.now() < dtTeamTimeEndsAt) {
+                const remaining = getTimerString(dtTeamTimeEndsAt);
+                statusMessage = `Team Time Remaining: ${remaining}`;
+                roundComplete = false;
+            } else {
+                statusMessage = "Round is over. Start the next round.";
+                roundComplete = true;
+            }
+            console.log(dtActionTimeEndsAt?.toString());
+            console.log(`Status Message: ${statusMessage}`);
+            console.log(`Round Complete: ${roundComplete}`);
+            setRoundState((prev) => {
+                return { ...prev, statusMessage, roundComplete };
+            });
+        }, 250);
+
+        return () => clearInterval(interval);
+    }, [round]);
 
     return (
         <div className="grid grid-cols-2 p-2 border-2 border-black rounded-t-lg">

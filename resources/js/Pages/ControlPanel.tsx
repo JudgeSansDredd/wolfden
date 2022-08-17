@@ -3,8 +3,8 @@ import Echo from "laravel-echo";
 import { DateTime } from "luxon";
 import React, { useState } from "react";
 import Admin from "../Components/ControlPanel/Admin";
+import RoundController from "../Components/ControlPanel/RoundController";
 import WolfAttacks from "../Components/ControlPanel/WolfAttacks";
-import RoundController from "../Components/RoundController";
 import Guest from "../Layouts/Guest";
 import {
     AttackType,
