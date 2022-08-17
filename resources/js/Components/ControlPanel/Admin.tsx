@@ -1,7 +1,7 @@
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/inertia-react";
 import React, { MouseEvent } from "react";
-import Button from "./Button";
+import Button from "../Common/Button";
 
 declare function route(name: string): string;
 

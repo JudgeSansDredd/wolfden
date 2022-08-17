@@ -1,8 +1,8 @@
 import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
 import React, { useState } from "react";
-import ActionTimer from "../Components/ActionTimer";
-import TeamTimer from "../Components/TeamTimer";
+import ActionTimer from "../Components/Dashboard/ActionTimer";
+import TeamTimer from "../Components/Dashboard/TeamTimer";
 import {
     AttackType,
     GameStateType,

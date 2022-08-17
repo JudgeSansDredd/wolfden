@@ -1,8 +1,8 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import React, { MouseEvent, useState } from "react";
-import { AttackType } from "../Types/GameTypes";
-import { getErrorMessage } from "../Utils/functions";
-import Button from "./Button";
+import { AttackType } from "../../Types/GameTypes";
+import { getErrorMessage } from "../../Utils/functions";
+import Button from "../Common/Button";
 
 declare function route(name: string): string;
 interface PropType {

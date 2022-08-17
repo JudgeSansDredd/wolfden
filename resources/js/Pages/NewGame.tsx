@@ -1,9 +1,9 @@
 import { Inertia } from "@inertiajs/inertia";
 import { Head, Link } from "@inertiajs/inertia-react";
 import React, { ChangeEvent, useState } from "react";
-import Button from "../Components/Button";
-import Input from "../Components/Input";
-import Label from "../Components/Label";
+import Button from "../Components/Common/Button";
+import Input from "../Components/Common/Input";
+import Label from "../Components/Common/Label";
 import Guest from "../Layouts/Guest";
 
 declare function route(name: string): string;
