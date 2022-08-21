@@ -15,7 +15,7 @@ export default function NewGame() {
         setConfirmation(e.currentTarget.value);
     };
 
-    const submit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const submit = () => {
         Inertia.post(route("post-start-new-game"), { confirmation });
     };
 
@@ -25,7 +25,6 @@ export default function NewGame() {
             <div className="text-3xl">Start a new game?</div>
             <Label
                 className=""
-                children=""
                 forInput="confirmation"
                 value="Confirm New Game"
             />

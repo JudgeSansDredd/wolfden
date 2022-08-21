@@ -1,12 +1,12 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import React, { MouseEvent, useState } from "react";
-import { AttackType } from "../../Types/GameTypes";
+import { AttackAPIType } from "../../Types/GameTypes";
 import { getErrorMessage } from "../../Utils/functions";
 import Button from "../Common/Button";
 
 declare function route(name: string): string;
 interface PropType {
-    attack: AttackType | null;
+    attack: AttackAPIType | null;
     roundUnderway: boolean;
 }
 export default function WolfAttacks({ attack, roundUnderway }: PropType) {
@@ -17,7 +17,7 @@ export default function WolfAttacks({ attack, roundUnderway }: PropType) {
         const attacking = e.currentTarget.id === "start-wolf-attack";
         axios
             .post(route("wolf-attack"), { attacking })
-            .then((res: AxiosResponse) => {
+            .then(() => {
                 setErrMessage(null);
             })
             .catch((e: AxiosError) => {

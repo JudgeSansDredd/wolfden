@@ -1,12 +1,12 @@
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/inertia-react";
-import React, { MouseEvent } from "react";
+import React from "react";
 import Button from "../Common/Button";
 
 declare function route(name: string): string;
 
 export default function Admin() {
-    const logout = (e: MouseEvent<HTMLButtonElement>) => {
+    const logout = () => {
         Inertia.post(route("logout"));
     };
 

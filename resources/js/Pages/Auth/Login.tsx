@@ -13,7 +13,7 @@ interface PropType {
 }
 
 export default function Login({ status, canResetPassword }: PropType) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, reset } = useForm({
         email: "",
         password: "",
         remember: "",
@@ -51,12 +51,7 @@ export default function Login({ status, canResetPassword }: PropType) {
 
             <form onSubmit={submit}>
                 <div>
-                    <Label
-                        className=""
-                        children=""
-                        forInput="email"
-                        value="Email"
-                    />
+                    <Label className="" forInput="email" value="Email" />
 
                     <Input
                         required={true}
@@ -71,12 +66,7 @@ export default function Login({ status, canResetPassword }: PropType) {
                 </div>
 
                 <div className="mt-4">
-                    <Label
-                        className=""
-                        children=""
-                        forInput="password"
-                        value="Password"
-                    />
+                    <Label className="" forInput="password" value="Password" />
 
                     <Input
                         required={true}

@@ -1,14 +1,14 @@
-import axios, { AxiosError, AxiosResponse } from "axios";
+import axios, { AxiosError } from "axios";
 import { DateTime } from "luxon";
 import React, { MouseEvent, useEffect, useState } from "react";
-import { RoundType } from "../../Types/GameTypes";
+import { RoundAPIType } from "../../Types/GameTypes";
 import { getErrorMessage, getTimerString } from "../../Utils/functions";
 import Button from "../Common/Button";
 
 declare function route(name: string): string;
 
 interface PropType {
-    round: RoundType | null;
+    round: RoundAPIType | null;
 }
 
 interface StateType {
@@ -29,7 +29,7 @@ export default function RoundController({ round }: PropType) {
         if (id === "start-new-round") {
             axios
                 .post(route("post-start-new-round"), {})
-                .then((res: AxiosResponse) => {
+                .then(() => {
                     setRoundState((prev) => {
                         return { ...prev, errMessage: null };
                     });

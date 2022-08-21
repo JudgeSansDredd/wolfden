@@ -7,17 +7,15 @@ import RoundController from "../Components/ControlPanel/RoundController";
 import WolfAttacks from "../Components/ControlPanel/WolfAttacks";
 import Guest from "../Layouts/Guest";
 import {
-    AttackType,
-    GameStateType,
-    GameType,
-    RoundType,
+    AttackAPIType,
+    GameAPIType,
+    GameStateAPIType,
+    RoundAPIType,
 } from "../Types/GameTypes";
 
-declare function route(name: string): string;
-
-export default function ControlPanel(props: GameStateType) {
-    const [gameState, setGameState] = useState<GameStateType>(props);
-    const { game, round, attack } = gameState;
+export default function ControlPanel(props: GameStateAPIType) {
+    const [gameState, setGameState] = useState<GameStateAPIType>(props);
+    const { round, attack } = gameState;
 
     // Set up echo to listen to web sockets
     const key = import.meta.env.VITE_PUSHER_APP_KEY;
@@ -33,18 +31,18 @@ export default function ControlPanel(props: GameStateType) {
 
     // Listen to the wolf den channel
     echo.channel("wolf.den.channel")
-        .listen("WolfAttackEvent", ({ attack }: { attack: AttackType }) => {
-            setGameState((prev: GameStateType) => {
+        .listen("WolfAttackEvent", ({ attack }: { attack: AttackAPIType }) => {
+            setGameState((prev: GameStateAPIType) => {
                 return { ...prev, attack };
             });
         })
-        .listen("RoundEvent", ({ round }: { round: RoundType }) => {
-            setGameState((prev: GameStateType) => {
+        .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
+            setGameState((prev: GameStateAPIType) => {
                 return { ...prev, round };
             });
         })
-        .listen("GameEvent", ({ game }: { game: GameType }) => {
-            setGameState((prev: GameStateType) => {
+        .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
+            setGameState((prev: GameStateAPIType) => {
                 return { ...prev, game };
             });
         });

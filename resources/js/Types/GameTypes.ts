@@ -1,10 +1,10 @@
-export interface GameType {
+export interface GameAPIType {
     id: number;
     created_at: string;
     updated_at: string;
 }
 
-export interface RoundType {
+export interface RoundAPIType {
     id: number;
     game_id: number;
     round_number: number;
@@ -14,7 +14,7 @@ export interface RoundType {
     updated_at: string;
 }
 
-export interface AttackType {
+export interface AttackAPIType {
     id: number;
     round_id: number;
     resolved: boolean;
@@ -22,8 +22,8 @@ export interface AttackType {
     updated_at: string;
 }
 
-export interface GameStateType {
-    game: GameType | null;
-    round: RoundType | null;
-    attack: AttackType | null;
+export interface GameStateAPIType {
+    game: GameAPIType | null;
+    round: RoundAPIType | null;
+    attack: AttackAPIType | null;
 }

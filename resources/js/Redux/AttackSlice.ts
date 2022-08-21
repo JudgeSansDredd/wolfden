@@ -1,4 +1,3 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
 import { AttackStateType } from "../Types/ReduxTypes";
 
@@ -13,13 +12,8 @@ export const attackSlice = createSlice({
         endAttack: (state) => {
             state.attacking = false;
         },
-        somethingWithValue: (state, action: PayloadAction<number>) => {
-            // TODO: Remove this useless reducer
-            state.attacking = action.payload > 0;
-        },
     },
 });
 
-export const { beginAttack, endAttack, somethingWithValue } =
-    attackSlice.actions;
+export const { beginAttack, endAttack } = attackSlice.actions;
 export default attackSlice.reducer;

@@ -1,30 +1,29 @@
 import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
-import { RoundType } from "../../Types/GameTypes";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../Types/ReduxTypes";
 import { getTimerString } from "../../Utils/functions";
 
-interface PropType {
-    round: RoundType;
-}
-
-export default function TeamTimer({ round }: PropType) {
-    const dtActionTimeEndsAt = DateTime.fromISO(round.action_time_ends_at);
-    const dtTeamTimeEndsAt = DateTime.fromISO(round.team_time_ends_at);
+export default function TeamTimer() {
+    const round = useSelector((state: StoreType) => state.round);
     const getVisible = () => {
-        return DateTime.now() >= dtActionTimeEndsAt;
+        if (!round.action_time_ends_at) {
+            return false;
+        }
+        return DateTime.now() >= round.action_time_ends_at;
     };
 
     const [timerState, setTimerState] = useState<{
         timerString: string;
         visible: boolean;
     }>({
-        timerString: getTimerString(dtTeamTimeEndsAt),
+        timerString: getTimerString(round.team_time_ends_at),
         visible: getVisible(),
     });
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const timerString = getTimerString(dtTeamTimeEndsAt);
+            const timerString = getTimerString(round.team_time_ends_at);
             const visible = getVisible();
             setTimerState({ timerString, visible });
         }, 250);

@@ -5,29 +5,29 @@ import { useDispatch, useSelector } from "react-redux";
 import ActionTimer from "../Components/Dashboard/ActionTimer";
 import TeamTimer from "../Components/Dashboard/TeamTimer";
 import { beginAttack, endAttack } from "../Redux/AttackSlice";
+import { updateRound } from "../Redux/RoundSlice";
 import {
-    AttackType,
-    GameStateType,
-    GameType,
-    RoundType,
+    AttackAPIType,
+    GameAPIType,
+    GameStateAPIType,
+    RoundAPIType,
 } from "../Types/GameTypes";
 import { StoreType } from "../Types/ReduxTypes";
 
 interface StateType {
-    game: GameType | null;
-    round: RoundType | null;
+    game: GameAPIType | null;
 }
 
-export default function Dashboard(props: GameStateType) {
+export default function Dashboard(props: GameStateAPIType) {
     const [gameState, setGameState] = useState<StateType>({
         game: props.game,
-        round: props.round,
     });
-    const { game, round } = gameState;
+    const { game } = gameState;
     const dispatch = useDispatch();
     const attacking = useSelector((state: StoreType) => state.attack.attacking);
+    const round = useSelector((state: StoreType) => state.round);
 
-    const updateAttack = (attack: AttackType) => {
+    const updateAttackStore = (attack: AttackAPIType) => {
         if (attack.resolved) {
             dispatch(endAttack());
         } else {
@@ -37,8 +37,9 @@ export default function Dashboard(props: GameStateType) {
 
     useEffect(() => {
         if (props.attack) {
-            updateAttack(props.attack);
+            updateAttackStore(props.attack);
         }
+        dispatch(updateRound(props.round));
     }, []);
 
     // Set up echo to listen to web sockets
@@ -60,15 +61,13 @@ export default function Dashboard(props: GameStateType) {
 
     // Listen to the wolf den channel
     echo.channel("wolf.den.channel")
-        .listen("WolfAttackEvent", ({ attack }: { attack: AttackType }) => {
-            updateAttack(attack);
+        .listen("WolfAttackEvent", ({ attack }: { attack: AttackAPIType }) => {
+            updateAttackStore(attack);
         })
-        .listen("RoundEvent", ({ round }: { round: RoundType }) => {
-            setGameState((prev: StateType) => {
-                return { ...prev, round };
-            });
+        .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
+            dispatch(updateRound(round));
         })
-        .listen("GameEvent", ({ game }: { game: GameType }) => {
+        .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
             setGameState((prev: StateType) => {
                 return { ...prev, game };
             });
@@ -102,8 +101,8 @@ export default function Dashboard(props: GameStateType) {
             >
                 <div className="container flex flex-col h-full mx-auto font-mono">
                     <div className="w-full text-center text-8xl">{`It is round ${round.round_number}`}</div>
-                    <ActionTimer round={round} />
-                    <TeamTimer round={round} />
+                    <ActionTimer />
+                    <TeamTimer />
                     <div
                         className={`flex my-2 text-xl border-2 border-blue-400 border-solid rounded-full`}
                     >

@@ -9,7 +9,10 @@ export function getErrorMessage(e: AxiosError): string {
     }
 }
 
-export function getTimerString(target: DateTime): string {
+export function getTimerString(target: DateTime | null): string {
+    if (!target) {
+        return "Invalid time";
+    }
     const now = DateTime.now();
     if (target < now) {
         return "00m 00s";
