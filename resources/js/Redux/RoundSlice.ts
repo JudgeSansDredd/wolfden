@@ -1,6 +1,5 @@
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { createSlice } from "@reduxjs/toolkit";
-import { DateTime } from "luxon";
 import { RoundAPIType } from "../Types/GameTypes";
 import { RoundStateType } from "../Types/ReduxTypes";
 
@@ -19,9 +18,8 @@ export const roundSlice = createSlice({
                 const { round_number, action_time_ends_at, team_time_ends_at } =
                     action.payload;
                 state.round_number = round_number;
-                state.action_time_ends_at =
-                    DateTime.fromISO(action_time_ends_at);
-                state.team_time_ends_at = DateTime.fromISO(team_time_ends_at);
+                state.action_time_ends_at = action_time_ends_at;
+                state.team_time_ends_at = team_time_ends_at;
             }
         },
     },

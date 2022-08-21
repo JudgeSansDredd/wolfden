@@ -21,18 +21,19 @@ export default function Dashboard(props: GameStateAPIType) {
     const { game, round, attack } = useSelector((state: StoreType) => state);
 
     useEffect(() => {
+        console.log(props.round);
         dispatch(updateGame(props.game));
         dispatch(updateRound(props.round));
         dispatch(updateAttack(props.attack));
     }, []);
 
     // Set up echo to listen to web sockets
-    const setupEcho = () => {
+    useEffect(() => {
         const key = import.meta.env.VITE_PUSHER_APP_KEY;
         const wsHost = `ws-${
             import.meta.env.VITE_PUSHER_APP_CLUSTER
         }.pusher.com`;
-        return new Echo({
+        const echo = new Echo({
             broadcaster: "pusher",
             key,
             wsHost,
@@ -40,22 +41,25 @@ export default function Dashboard(props: GameStateAPIType) {
             forceTLS: true,
             enabledTransports: ["ws"],
         });
-    };
-    const echo = setupEcho();
+        echo.channel("wolf.den.channel")
+            .listen(
+                "WolfAttackEvent",
+                ({ attack }: { attack: AttackAPIType }) => {
+                    dispatch(updateAttack(attack));
+                }
+            )
+            .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
+                dispatch(updateRound(round));
+            })
+            .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
+                dispatch(updateGame(game));
+            });
+        return () => {
+            echo.leaveChannel("wolf.den.channel");
+        };
+    }, []);
 
-    // Listen to the wolf den channel
-    echo.channel("wolf.den.channel")
-        .listen("WolfAttackEvent", ({ attack }: { attack: AttackAPIType }) => {
-            dispatch(updateAttack(attack));
-        })
-        .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
-            dispatch(updateRound(round));
-        })
-        .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
-            dispatch(updateGame(game));
-        });
-
-    if (!game || !round) {
+    if (!game.game_created || !round.round_number) {
         return <div>The game has not started</div>;
     }
     const wolfAttack = (

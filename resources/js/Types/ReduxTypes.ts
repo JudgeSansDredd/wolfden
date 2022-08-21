@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import { store } from "../Redux/Store";
 
 export type StoreType = ReturnType<typeof store.getState>;
@@ -10,8 +9,8 @@ export interface AttackStateType {
 
 export interface RoundStateType {
     round_number: number | null;
-    action_time_ends_at: DateTime | null;
-    team_time_ends_at: DateTime | null;
+    action_time_ends_at: string | null;
+    team_time_ends_at: string | null;
 }
 
 export interface GameStateType {

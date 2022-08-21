@@ -19,37 +19,44 @@ import {
 export default function ControlPanel(props: GameStateAPIType) {
     const dispatch = useDispatch();
 
-    // Set up echo to listen to web sockets
-    const key = import.meta.env.VITE_PUSHER_APP_KEY;
-    const wsHost = `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`;
-    const echo = new Echo({
-        broadcaster: "pusher",
-        key,
-        wsHost,
-        wsPort: 80,
-        forceTLS: true,
-        enabledTransports: ["ws"],
-    });
-
     useEffect(() => {
         const { game, round, attack } = props;
         dispatch(updateGame(game));
         dispatch(updateRound(round));
         dispatch(updateAttack(attack));
-    }, []);
+    }, [props]);
 
-    // Listen to the wolf den channel
-    // TODO: use effect this?
-    echo.channel("wolf.den.channel")
-        .listen("WolfAttackEvent", ({ attack }: { attack: AttackAPIType }) => {
-            dispatch(updateAttack(attack));
-        })
-        .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
-            dispatch(updateRound(round));
-        })
-        .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
-            dispatch(updateGame(game));
+    useEffect(() => {
+        // Listen to the wolf den channel
+        const key = import.meta.env.VITE_PUSHER_APP_KEY;
+        const wsHost = `ws-${
+            import.meta.env.VITE_PUSHER_APP_CLUSTER
+        }.pusher.com`;
+        const echo = new Echo({
+            broadcaster: "pusher",
+            key,
+            wsHost,
+            wsPort: 80,
+            forceTLS: true,
+            enabledTransports: ["ws"],
         });
+        echo.channel("wolf.den.channel")
+            .listen(
+                "WolfAttackEvent",
+                ({ attack }: { attack: AttackAPIType }) => {
+                    dispatch(updateAttack(attack));
+                }
+            )
+            .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
+                dispatch(updateRound(round));
+            })
+            .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
+                dispatch(updateGame(game));
+            });
+        return () => {
+            echo.leaveChannel("wolf.den.channel");
+        };
+    }, []);
 
     return (
         <Guest>

@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { StoreType } from "../../Types/ReduxTypes";
@@ -5,16 +6,19 @@ import { getTimerString } from "../../Utils/functions";
 
 export default function ActionTimer() {
     const round = useSelector((state: StoreType) => state.round);
+    const dtActionTimeEndsAt = round.action_time_ends_at
+        ? DateTime.fromISO(round.action_time_ends_at)
+        : null;
 
     const [timerState, setTimerState] = useState<{
         timerString: string;
     }>({
-        timerString: getTimerString(round.action_time_ends_at),
+        timerString: getTimerString(dtActionTimeEndsAt),
     });
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const timerString = getTimerString(round.action_time_ends_at);
+            const timerString = getTimerString(dtActionTimeEndsAt);
             setTimerState({ timerString });
         }, 250);
         return () => clearInterval(interval);

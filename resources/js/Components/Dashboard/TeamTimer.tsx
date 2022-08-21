@@ -6,24 +6,30 @@ import { getTimerString } from "../../Utils/functions";
 
 export default function TeamTimer() {
     const round = useSelector((state: StoreType) => state.round);
+    const dtActionTimeEndsAt = round.action_time_ends_at
+        ? DateTime.fromISO(round.action_time_ends_at)
+        : null;
+    const dtTeamTimeEndsAt = round.team_time_ends_at
+        ? DateTime.fromISO(round.team_time_ends_at)
+        : null;
     const getVisible = () => {
-        if (!round.action_time_ends_at) {
+        if (!dtActionTimeEndsAt) {
             return false;
         }
-        return DateTime.now() >= round.action_time_ends_at;
+        return DateTime.now() >= dtActionTimeEndsAt;
     };
 
     const [timerState, setTimerState] = useState<{
         timerString: string;
         visible: boolean;
     }>({
-        timerString: getTimerString(round.team_time_ends_at),
+        timerString: getTimerString(dtTeamTimeEndsAt),
         visible: getVisible(),
     });
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const timerString = getTimerString(round.team_time_ends_at);
+            const timerString = getTimerString(dtTeamTimeEndsAt);
             const visible = getVisible();
             setTimerState({ timerString, visible });
         }, 250);

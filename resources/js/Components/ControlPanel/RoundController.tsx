@@ -16,6 +16,13 @@ interface StateType {
 
 export default function RoundController() {
     const { round } = useSelector((state: StoreType) => state);
+    const dtActionTimeEndsAt = round.action_time_ends_at
+        ? DateTime.fromISO(round.action_time_ends_at)
+        : null;
+    const dtTeamTimeEndsAt = round.team_time_ends_at
+        ? DateTime.fromISO(round.team_time_ends_at)
+        : null;
+
     const [roundState, setRoundState] = useState<StateType>({
         errMessage: null,
         statusMessage: "",
@@ -49,15 +56,15 @@ export default function RoundController() {
         const interval = setInterval(() => {
             let statusMessage: string;
             let roundComplete: boolean;
-            if (!round.action_time_ends_at || !round.team_time_ends_at) {
+            if (!dtActionTimeEndsAt || !dtTeamTimeEndsAt) {
                 statusMessage = "Round has not started.";
                 roundComplete = true;
-            } else if (DateTime.now() < round.action_time_ends_at) {
-                const remaining = getTimerString(round.action_time_ends_at);
+            } else if (DateTime.now() < dtActionTimeEndsAt) {
+                const remaining = getTimerString(dtActionTimeEndsAt);
                 statusMessage = `Action Time Remaining: ${remaining}`;
                 roundComplete = false;
-            } else if (DateTime.now() < round.team_time_ends_at) {
-                const remaining = getTimerString(round.team_time_ends_at);
+            } else if (DateTime.now() < dtTeamTimeEndsAt) {
+                const remaining = getTimerString(dtTeamTimeEndsAt);
                 statusMessage = `Team Time Remaining: ${remaining}`;
                 roundComplete = false;
             } else {

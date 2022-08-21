@@ -9,9 +9,12 @@ import Button from "../Common/Button";
 declare function route(name: string): string;
 export default function WolfAttacks() {
     const { round, attack } = useSelector((state: StoreType) => state);
+    const dtTeamTimeEndsAt = round.team_time_ends_at
+        ? DateTime.fromISO(round.team_time_ends_at)
+        : null;
+
     const calcRoundUnderway = () => {
-        const endsAt = round.team_time_ends_at;
-        return endsAt !== null && DateTime.now() < endsAt;
+        return dtTeamTimeEndsAt !== null && DateTime.now() < dtTeamTimeEndsAt;
     };
     const [roundUnderway, setRoundUnderway] = useState<boolean>(
         calcRoundUnderway()
@@ -36,12 +39,13 @@ export default function WolfAttacks() {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setRoundUnderway(calcRoundUnderway());
+            const underway = calcRoundUnderway();
+            setRoundUnderway(underway);
         }, 250);
         return () => {
             clearInterval(interval);
         };
-    }, []);
+    }, [round]);
 
     let statusMessage: string;
     if (!roundUnderway) {
