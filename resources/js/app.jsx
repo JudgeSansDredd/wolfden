@@ -7,7 +7,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
-import { store } from "./Redux/store";
+import { store } from "./Redux/Store";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
