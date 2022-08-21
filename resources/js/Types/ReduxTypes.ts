@@ -13,3 +13,7 @@ export interface RoundStateType {
     action_time_ends_at: DateTime | null;
     team_time_ends_at: DateTime | null;
 }
+
+export interface GameStateType {
+    game_created: boolean;
+}

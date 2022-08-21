@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AttackAPIType } from "../Types/GameTypes";
 import { AttackStateType } from "../Types/ReduxTypes";
 
 const initialState: AttackStateType = { attacking: false };
@@ -6,14 +7,12 @@ export const attackSlice = createSlice({
     name: "attack",
     initialState,
     reducers: {
-        beginAttack: (state) => {
-            state.attacking = true;
-        },
-        endAttack: (state) => {
-            state.attacking = false;
+        updateAttack: (state, action: PayloadAction<AttackAPIType | null>) => {
+            state.attacking =
+                action.payload !== null && !action.payload.resolved;
         },
     },
 });
 
-export const { beginAttack, endAttack } = attackSlice.actions;
+export const { updateAttack } = attackSlice.actions;
 export default attackSlice.reducer;

@@ -1,16 +1,22 @@
 import axios, { AxiosError } from "axios";
-import React, { MouseEvent, useState } from "react";
-import { AttackAPIType } from "../../Types/GameTypes";
+import { DateTime } from "luxon";
+import React, { MouseEvent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../Types/ReduxTypes";
 import { getErrorMessage } from "../../Utils/functions";
 import Button from "../Common/Button";
 
 declare function route(name: string): string;
-interface PropType {
-    attack: AttackAPIType | null;
-    roundUnderway: boolean;
-}
-export default function WolfAttacks({ attack, roundUnderway }: PropType) {
-    const attackUnderway = (attack && !attack.resolved) || false;
+export default function WolfAttacks() {
+    const { round, attack } = useSelector((state: StoreType) => state);
+    const calcRoundUnderway = () => {
+        const endsAt = round.team_time_ends_at;
+        return endsAt !== null && DateTime.now() < endsAt;
+    };
+    const [roundUnderway, setRoundUnderway] = useState<boolean>(
+        calcRoundUnderway()
+    );
+
     const [errMessage, setErrMessage] = useState<string | null>(null);
 
     const doWolfAttack = (e: MouseEvent<HTMLButtonElement>): void => {
@@ -28,11 +34,20 @@ export default function WolfAttacks({ attack, roundUnderway }: PropType) {
             });
     };
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setRoundUnderway(calcRoundUnderway());
+        }, 250);
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
     let statusMessage: string;
     if (!roundUnderway) {
         statusMessage = "Between Rounds";
     } else {
-        statusMessage = attackUnderway ? "Attack Underway" : "No Attack";
+        statusMessage = attack.attacking ? "Attack Underway" : "No Attack";
     }
     return (
         <div className="grid grid-cols-2 p-2 border-2 border-black rounded-b-lg">
@@ -41,7 +56,7 @@ export default function WolfAttacks({ attack, roundUnderway }: PropType) {
                 <Button
                     type="button"
                     className="my-1"
-                    disabled={!roundUnderway || attackUnderway}
+                    disabled={!roundUnderway || attack.attacking}
                     onClick={doWolfAttack}
                     id="start-wolf-attack"
                 >
@@ -50,7 +65,7 @@ export default function WolfAttacks({ attack, roundUnderway }: PropType) {
                 <Button
                     type="button"
                     className="my-1"
-                    disabled={!roundUnderway || !attackUnderway}
+                    disabled={!roundUnderway || !attack.attacking}
                     onClick={doWolfAttack}
                     id="end-wolf-attack"
                 >

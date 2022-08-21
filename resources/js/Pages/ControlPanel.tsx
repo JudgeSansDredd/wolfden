@@ -1,11 +1,14 @@
 import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
-import { DateTime } from "luxon";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Admin from "../Components/ControlPanel/Admin";
 import RoundController from "../Components/ControlPanel/RoundController";
 import WolfAttacks from "../Components/ControlPanel/WolfAttacks";
 import Guest from "../Layouts/Guest";
+import { updateAttack } from "../Redux/AttackSlice";
+import { updateGame } from "../Redux/GameSlice";
+import { updateRound } from "../Redux/RoundSlice";
 import {
     AttackAPIType,
     GameAPIType,
@@ -14,8 +17,7 @@ import {
 } from "../Types/GameTypes";
 
 export default function ControlPanel(props: GameStateAPIType) {
-    const [gameState, setGameState] = useState<GameStateAPIType>(props);
-    const { round, attack } = gameState;
+    const dispatch = useDispatch();
 
     // Set up echo to listen to web sockets
     const key = import.meta.env.VITE_PUSHER_APP_KEY;
@@ -29,32 +31,31 @@ export default function ControlPanel(props: GameStateAPIType) {
         enabledTransports: ["ws"],
     });
 
+    useEffect(() => {
+        const { game, round, attack } = props;
+        dispatch(updateGame(game));
+        dispatch(updateRound(round));
+        dispatch(updateAttack(attack));
+    }, []);
+
     // Listen to the wolf den channel
+    // TODO: use effect this?
     echo.channel("wolf.den.channel")
         .listen("WolfAttackEvent", ({ attack }: { attack: AttackAPIType }) => {
-            setGameState((prev: GameStateAPIType) => {
-                return { ...prev, attack };
-            });
+            dispatch(updateAttack(attack));
         })
         .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
-            setGameState((prev: GameStateAPIType) => {
-                return { ...prev, round };
-            });
+            dispatch(updateRound(round));
         })
         .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
-            setGameState((prev: GameStateAPIType) => {
-                return { ...prev, game };
-            });
+            dispatch(updateGame(game));
         });
-    const roundUnderway = round
-        ? DateTime.now() < DateTime.fromISO(round.action_time_ends_at)
-        : false;
 
     return (
         <Guest>
             <Head title="Control Panel" />
-            <RoundController round={round} />
-            <WolfAttacks roundUnderway={roundUnderway} attack={attack} />
+            <RoundController />
+            <WolfAttacks />
             <Admin />
         </Guest>
     );

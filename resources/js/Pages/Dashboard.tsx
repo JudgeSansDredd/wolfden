@@ -1,10 +1,11 @@
 import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ActionTimer from "../Components/Dashboard/ActionTimer";
 import TeamTimer from "../Components/Dashboard/TeamTimer";
-import { beginAttack, endAttack } from "../Redux/AttackSlice";
+import { updateAttack } from "../Redux/AttackSlice";
+import { updateGame } from "../Redux/GameSlice";
 import { updateRound } from "../Redux/RoundSlice";
 import {
     AttackAPIType,
@@ -14,32 +15,15 @@ import {
 } from "../Types/GameTypes";
 import { StoreType } from "../Types/ReduxTypes";
 
-interface StateType {
-    game: GameAPIType | null;
-}
-
 export default function Dashboard(props: GameStateAPIType) {
-    const [gameState, setGameState] = useState<StateType>({
-        game: props.game,
-    });
-    const { game } = gameState;
     const dispatch = useDispatch();
-    const attacking = useSelector((state: StoreType) => state.attack.attacking);
-    const round = useSelector((state: StoreType) => state.round);
 
-    const updateAttackStore = (attack: AttackAPIType) => {
-        if (attack.resolved) {
-            dispatch(endAttack());
-        } else {
-            dispatch(beginAttack());
-        }
-    };
+    const { game, round, attack } = useSelector((state: StoreType) => state);
 
     useEffect(() => {
-        if (props.attack) {
-            updateAttackStore(props.attack);
-        }
+        dispatch(updateGame(props.game));
         dispatch(updateRound(props.round));
+        dispatch(updateAttack(props.attack));
     }, []);
 
     // Set up echo to listen to web sockets
@@ -62,15 +46,13 @@ export default function Dashboard(props: GameStateAPIType) {
     // Listen to the wolf den channel
     echo.channel("wolf.den.channel")
         .listen("WolfAttackEvent", ({ attack }: { attack: AttackAPIType }) => {
-            updateAttackStore(attack);
+            dispatch(updateAttack(attack));
         })
         .listen("RoundEvent", ({ round }: { round: RoundAPIType }) => {
             dispatch(updateRound(round));
         })
         .listen("GameEvent", ({ game }: { game: GameAPIType }) => {
-            setGameState((prev: StateType) => {
-                return { ...prev, game };
-            });
+            dispatch(updateGame(game));
         });
 
     if (!game || !round) {
@@ -79,7 +61,7 @@ export default function Dashboard(props: GameStateAPIType) {
     const wolfAttack = (
         <div
             className={`${
-                attacking ? "" : "hidden"
+                attack.attacking ? "" : "hidden"
             } flex text-xl border-2 border-white border-solid rounded-full my-2 animate-pulse`}
         >
             <div className="p-2 text-center text-white text-red-700 bg-white rounded-l-full">
@@ -96,7 +78,9 @@ export default function Dashboard(props: GameStateAPIType) {
             <Head title="Dashboard" />
             <div
                 className={`w-screen h-screen ${
-                    attacking ? "bg-red-900 text-white" : "bg-white text-black"
+                    attack.attacking
+                        ? "bg-red-900 text-white"
+                        : "bg-white text-black"
                 }`}
             >
                 <div className="container flex flex-col h-full mx-auto font-mono">

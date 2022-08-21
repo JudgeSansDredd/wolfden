@@ -1,15 +1,12 @@
 import axios, { AxiosError } from "axios";
 import { DateTime } from "luxon";
 import React, { MouseEvent, useEffect, useState } from "react";
-import { RoundAPIType } from "../../Types/GameTypes";
+import { useSelector } from "react-redux";
+import { StoreType } from "../../Types/ReduxTypes";
 import { getErrorMessage, getTimerString } from "../../Utils/functions";
 import Button from "../Common/Button";
 
 declare function route(name: string): string;
-
-interface PropType {
-    round: RoundAPIType | null;
-}
 
 interface StateType {
     errMessage: string | null;
@@ -17,7 +14,8 @@ interface StateType {
     roundComplete: boolean;
 }
 
-export default function RoundController({ round }: PropType) {
+export default function RoundController() {
+    const { round } = useSelector((state: StoreType) => state);
     const [roundState, setRoundState] = useState<StateType>({
         errMessage: null,
         statusMessage: "",
@@ -51,30 +49,21 @@ export default function RoundController({ round }: PropType) {
         const interval = setInterval(() => {
             let statusMessage: string;
             let roundComplete: boolean;
-            const dtActionTimeEndsAt = round
-                ? DateTime.fromISO(round.action_time_ends_at)
-                : null;
-            const dtTeamTimeEndsAt = round
-                ? DateTime.fromISO(round.team_time_ends_at)
-                : null;
-            if (!dtActionTimeEndsAt || !dtTeamTimeEndsAt) {
+            if (!round.action_time_ends_at || !round.team_time_ends_at) {
                 statusMessage = "Round has not started.";
                 roundComplete = true;
-            } else if (DateTime.now() < dtActionTimeEndsAt) {
-                const remaining = getTimerString(dtActionTimeEndsAt);
+            } else if (DateTime.now() < round.action_time_ends_at) {
+                const remaining = getTimerString(round.action_time_ends_at);
                 statusMessage = `Action Time Remaining: ${remaining}`;
                 roundComplete = false;
-            } else if (DateTime.now() < dtTeamTimeEndsAt) {
-                const remaining = getTimerString(dtTeamTimeEndsAt);
+            } else if (DateTime.now() < round.team_time_ends_at) {
+                const remaining = getTimerString(round.team_time_ends_at);
                 statusMessage = `Team Time Remaining: ${remaining}`;
                 roundComplete = false;
             } else {
                 statusMessage = "Round is over. Start the next round.";
                 roundComplete = true;
             }
-            console.log(dtActionTimeEndsAt?.toString());
-            console.log(`Status Message: ${statusMessage}`);
-            console.log(`Round Complete: ${roundComplete}`);
             setRoundState((prev) => {
                 return { ...prev, statusMessage, roundComplete };
             });
