@@ -6,6 +6,8 @@ import { InertiaProgress } from "@inertiajs/progress";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import React from "react";
 import { render } from "react-dom";
+import { Provider } from "react-redux";
+import { store } from "./Redux/store";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";
@@ -18,7 +20,12 @@ createInertiaApp({
             import.meta.glob("./Pages/**/*.tsx")
         ),
     setup({ el, App, props }) {
-        return render(<App {...props} />, el);
+        return render(
+            <Provider store={store}>
+                <App {...props} />
+            </Provider>,
+            el
+        );
     },
 });
 
