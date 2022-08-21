@@ -1,45 +1,75 @@
 import { Head } from "@inertiajs/inertia-react";
 import Echo from "laravel-echo";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ActionTimer from "../Components/Dashboard/ActionTimer";
 import TeamTimer from "../Components/Dashboard/TeamTimer";
+import { beginAttack, endAttack } from "../Redux/AttackSlice";
 import {
     AttackType,
     GameStateType,
     GameType,
     RoundType,
 } from "../Types/GameTypes";
+import { StoreType } from "../Types/ReduxTypes";
+
+interface StateType {
+    game: GameType | null;
+    round: RoundType | null;
+}
 
 export default function Dashboard(props: GameStateType) {
-    const [gameState, setGameState] = useState<GameStateType>(props);
-    const { game, round, attack } = gameState;
+    const [gameState, setGameState] = useState<StateType>({
+        game: props.game,
+        round: props.round,
+    });
+    const { game, round } = gameState;
+    const dispatch = useDispatch();
+    const attacking = useSelector((state: StoreType) => state.attack.attacking);
+
+    const updateAttack = (attack: AttackType) => {
+        if (attack.resolved) {
+            dispatch(endAttack());
+        } else {
+            dispatch(beginAttack());
+        }
+    };
+
+    useEffect(() => {
+        if (props.attack) {
+            updateAttack(props.attack);
+        }
+    }, []);
 
     // Set up echo to listen to web sockets
-    const key = import.meta.env.VITE_PUSHER_APP_KEY;
-    const wsHost = `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`;
-    const echo = new Echo({
-        broadcaster: "pusher",
-        key,
-        wsHost,
-        wsPort: 80,
-        forceTLS: true,
-        enabledTransports: ["ws"],
-    });
+    const setupEcho = () => {
+        const key = import.meta.env.VITE_PUSHER_APP_KEY;
+        const wsHost = `ws-${
+            import.meta.env.VITE_PUSHER_APP_CLUSTER
+        }.pusher.com`;
+        return new Echo({
+            broadcaster: "pusher",
+            key,
+            wsHost,
+            wsPort: 80,
+            forceTLS: true,
+            enabledTransports: ["ws"],
+        });
+    };
+    const echo = setupEcho();
 
     // Listen to the wolf den channel
     echo.channel("wolf.den.channel")
         .listen("WolfAttackEvent", ({ attack }: { attack: AttackType }) => {
-            setGameState((prev: GameStateType) => {
-                return { ...prev, attack };
-            });
+            updateAttack(attack);
         })
         .listen("RoundEvent", ({ round }: { round: RoundType }) => {
-            setGameState((prev: GameStateType) => {
+            setGameState((prev: StateType) => {
                 return { ...prev, round };
             });
         })
         .listen("GameEvent", ({ game }: { game: GameType }) => {
-            setGameState((prev: GameStateType) => {
+            setGameState((prev: StateType) => {
                 return { ...prev, game };
             });
         });
@@ -47,7 +77,6 @@ export default function Dashboard(props: GameStateType) {
     if (!game || !round) {
         return <div>The game has not started</div>;
     }
-    const attacking = attack && !attack.resolved;
     const wolfAttack = (
         <div
             className={`${
