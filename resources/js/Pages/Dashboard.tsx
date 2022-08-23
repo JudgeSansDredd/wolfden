@@ -21,7 +21,6 @@ export default function Dashboard(props: GameStateAPIType) {
     const { game, round, attack } = useSelector((state: StoreType) => state);
 
     useEffect(() => {
-        console.log(props.round);
         dispatch(updateGame(props.game));
         dispatch(updateRound(props.round));
         dispatch(updateAttack(props.attack));
@@ -33,6 +32,7 @@ export default function Dashboard(props: GameStateAPIType) {
         const wsHost = `ws-${
             import.meta.env.VITE_PUSHER_APP_CLUSTER
         }.pusher.com`;
+        console.log(key, wsHost);
         const echo = new Echo({
             broadcaster: "pusher",
             key,
@@ -45,6 +45,7 @@ export default function Dashboard(props: GameStateAPIType) {
             .listen(
                 "WolfAttackEvent",
                 ({ attack }: { attack: AttackAPIType }) => {
+                    console.log(attack);
                     dispatch(updateAttack(attack));
                 }
             )

@@ -14,6 +14,10 @@ class Game extends Model
         'updated_at' => 'datetime',
     ];
 
+    public function user() {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function rounds() {
         return $this->hasMany(Round::class, 'game_id', 'id');
     }

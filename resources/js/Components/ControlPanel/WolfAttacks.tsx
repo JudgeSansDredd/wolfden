@@ -60,6 +60,7 @@ export default function WolfAttacks() {
                 <Button
                     type="button"
                     className="my-1"
+                    colorClasses="bg-gray-900 text-white"
                     disabled={!roundUnderway || attack.attacking}
                     onClick={doWolfAttack}
                     id="start-wolf-attack"
@@ -69,7 +70,8 @@ export default function WolfAttacks() {
                 <Button
                     type="button"
                     className="my-1"
-                    disabled={!roundUnderway || !attack.attacking}
+                    colorClasses="bg-gray-900 text-white"
+                    disabled={!attack.attacking}
                     onClick={doWolfAttack}
                     id="end-wolf-attack"
                 >

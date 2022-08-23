@@ -7,6 +7,7 @@ use App\Events\RoundEvent;
 use App\Events\WolfAttackEvent;
 use App\Models\Game;
 use App\Models\Round;
+use App\Models\User;
 use App\Utils\GameUtils;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -22,7 +23,8 @@ class APIController extends Controller
         $confirmation = $request->confirmation;
 
         if($confirmation == 'start-new-game') {
-            $game = Game::create();
+            $user = User::find(auth()->user()->id);
+            $game = $user->games()->create([]);
             GameEvent::dispatch($game);
             return redirect()->route('control-panel');
         } else {

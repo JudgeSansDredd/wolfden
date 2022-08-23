@@ -86,6 +86,7 @@ export default function RoundController() {
                 <Button
                     type="button"
                     className="my-1"
+                    colorClasses="bg-gray-900 text-white"
                     disabled={false}
                     onClick={startRound}
                     id="start-new-round"

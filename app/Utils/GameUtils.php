@@ -4,11 +4,16 @@ namespace App\Utils;
 
 use App\Models\Game;
 use App\Models\Round;
+use App\Models\User;
 
 class GameUtils {
 
     private static function getCurrentGame() {
-        $game = Game::latest()->first();
+        if(!auth()->check()) {
+            return null;
+        }
+        $user = User::find(auth()->user()->id);
+        $game = $user->games()->latest()->first();
         return $game;
     }
 

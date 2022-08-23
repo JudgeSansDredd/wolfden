@@ -18,18 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        User::firstOrCreate([
-            'email' => env('ADMIN_EMAIL')
-        ], [
-            'name' => env('ADMIN_NAME'),
-            'password' => Hash::make(env('ADMIN_PASSWORD'))
+        $this->call([
+            UserSeeder::class
         ]);
     }
 }

@@ -19,6 +19,10 @@ export default function NewGame() {
         Inertia.post(route("post-start-new-game"), { confirmation });
     };
 
+    const logout = () => {
+        Inertia.post(route("logout"));
+    };
+
     return (
         <Guest>
             <Head title="Start New Game" />
@@ -42,18 +46,28 @@ export default function NewGame() {
             <div className="flex justify-between">
                 <Link href={route("control-panel")}>
                     <Button
-                        className="mt-2 bg-red-600 active:bg-red-900"
+                        className="m-2"
+                        colorClasses="bg-gray-900 active:bg-gray-900 text-white"
                         disabled={false}
                     >
                         Return to Control Panel
                     </Button>
                 </Link>
                 <Button
-                    className="mt-2 bg-green-600 active:bg-green-900"
+                    className="m-2"
+                    colorClasses="bg-green-600 active:bg-green-900"
                     disabled={false}
                     onClick={submit}
                 >
                     Start New Game
+                </Button>
+                <Button
+                    className="m-2"
+                    colorClasses="bg-red-500 active:bg-red-900"
+                    disabled={false}
+                    onClick={logout}
+                >
+                    Logout
                 </Button>
             </div>
         </Guest>
