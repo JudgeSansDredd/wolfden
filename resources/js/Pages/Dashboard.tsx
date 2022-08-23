@@ -45,7 +45,6 @@ export default function Dashboard(props: GameStateAPIType) {
             .listen(
                 "WolfAttackEvent",
                 ({ attack }: { attack: AttackAPIType }) => {
-                    console.log(attack);
                     dispatch(updateAttack(attack));
                 }
             )

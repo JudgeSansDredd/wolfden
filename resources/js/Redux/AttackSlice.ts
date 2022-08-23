@@ -9,7 +9,7 @@ export const attackSlice = createSlice({
     reducers: {
         updateAttack: (state, action: PayloadAction<AttackAPIType | null>) => {
             state.attacking =
-                action.payload !== null && !action.payload.resolved;
+                action.payload !== null && !action.payload.resolved_at;
         },
     },
 });

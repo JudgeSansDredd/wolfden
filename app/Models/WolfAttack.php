@@ -12,4 +12,8 @@ class WolfAttack extends Model
     public function round() {
         return $this->belongsTo(Round::class, 'round_id', 'id');
     }
+
+    public function getResolvedAttribute() {
+        return $this->resolved_at !== null;
+    }
 }

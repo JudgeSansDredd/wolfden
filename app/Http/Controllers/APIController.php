@@ -85,7 +85,7 @@ class APIController extends Controller
                     return response("Begin an already underway attack", 400);
                 } else { // Front end says not attacking
                     // Resolve attack
-                    $attack->resolved = true;
+                    $attack->resolved_at = Carbon::now();
                     $attack->save();
                 }
             }

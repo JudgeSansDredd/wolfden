@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('wolf_attacks', function (Blueprint $table) {
             $table->id();
             $table->integer('round_id');
-            $table->boolean('resolved')->default(false);
+            $table->dateTime('resolved_at')->nullable();
             $table->timestamps();
         });
     }

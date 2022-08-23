@@ -17,7 +17,7 @@ export interface RoundAPIType {
 export interface AttackAPIType {
     id: number;
     round_id: number;
-    resolved: boolean;
+    resolved_at: string;
     created_at: string;
     updated_at: string;
 }
