@@ -26,4 +26,5 @@ export interface GameStateAPIType {
     game: GameAPIType | null;
     round: RoundAPIType | null;
     attack: AttackAPIType | null;
+    qr: string;
 }

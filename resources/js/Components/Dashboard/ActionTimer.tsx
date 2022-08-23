@@ -25,7 +25,7 @@ export default function ActionTimer() {
     }, [round]);
 
     return (
-        <div className="flex my-2 text-xl border-2 border-yellow-500 border-solid rounded-full">
+        <div className="flex self-stretch my-2 text-xl border-2 border-yellow-500 border-solid rounded-full">
             <div className="p-2 text-center text-white bg-yellow-500 rounded-l-full">
                 Action Phase
             </div>

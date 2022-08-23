@@ -87,12 +87,16 @@ export default function Dashboard(props: GameStateAPIType) {
                         : "bg-white text-black"
                 }`}
             >
-                <div className="container flex flex-col h-full mx-auto font-mono">
+                <div className="container flex flex-col items-center h-full mx-auto font-mono">
+                    <div
+                        dangerouslySetInnerHTML={{ __html: props.qr }}
+                        className="mt-2 self-left"
+                    />
                     <div className="w-full text-center text-8xl">{`It is round ${round.round_number}`}</div>
                     <ActionTimer />
                     <TeamTimer />
                     <div
-                        className={`flex my-2 text-xl border-2 border-blue-400 border-solid rounded-full`}
+                        className={`flex my-2 text-xl border-2 border-blue-400 border-solid rounded-full self-stretch`}
                     >
                         <div className="p-2 text-lg text-center text-white bg-blue-400 rounded-l-full">
                             <svg

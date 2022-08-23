@@ -39,7 +39,7 @@ export default function TeamTimer() {
 
     return (
         <div
-            className={`flex my-2 text-xl border-2 border-green-600 border-solid rounded-full ${
+            className={`flex my-2 text-xl border-2 border-green-600 border-solid rounded-full self-stretch ${
                 timerState.visible ? "" : "hidden"
             }`}
         >
