@@ -26,4 +26,8 @@ class Game extends Model
         $round = $this->rounds()->latest();
         return !empty($round) ? $round : false;
     }
+
+    public function messages() {
+        return $this->hasMany(Message::class, 'game_id', 'id');
+    }
 }
