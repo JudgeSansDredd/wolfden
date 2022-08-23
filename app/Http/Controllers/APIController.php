@@ -24,7 +24,7 @@ class APIController extends Controller
 
         if($confirmation == 'start-new-game') {
             $user = User::find(auth()->user()->id);
-            $game = $user->games()->create([]);
+            $game = $user->games()->create(['room_code' => GameUtils::generateRoomCode()]);
             GameEvent::dispatch($game);
             return redirect()->route('control-panel');
         } else {

@@ -1,5 +1,6 @@
 export interface GameAPIType {
     id: number;
+    room_code: string;
     created_at: string;
     updated_at: string;
 }

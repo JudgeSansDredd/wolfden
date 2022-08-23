@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
+            $table->string('room_code')->unique('room_code_unique');
             $table->timestamps();
         });
     }

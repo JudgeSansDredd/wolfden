@@ -14,6 +14,8 @@ class Game extends Model
         'updated_at' => 'datetime',
     ];
 
+    protected $fillable = ['room_code'];
+
     public function user() {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }

@@ -11,15 +11,18 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class PageController extends Controller
 {
     public function dashboard(Request $request) {
-        $all = GameUtils::getCurrentAll();
-        $all['qr'] = QrCode::size(100)
+        $room_code = $request->get('room_code');
+        if(empty($room_code)) {
+            return "You'll need a room code";
+        }
+        extract(GameUtils::getCurrentAll($room_code));
+        $qr = empty($game) ? null : QrCode::size(100)
             // ->eyeColor(0, 0, 0, 0, 255, 0, 0)
             // ->eyeColor(1, 0, 0, 0, 255, 0, 0)
             ->gradient(255, 0, 0, 0, 0, 0, 'radial')
-            ->generate($request->fullUrlWithQuery(['room_code' => 'abcdefg']))
+            ->generate($request->fullUrlWithQuery(['room_code' => $game['room_code']]))
             ->toHtml();
-        Log::debug($all);
-        return Inertia::render('Dashboard', $all);
+        return Inertia::render('Dashboard', compact('game', 'round', 'attack', 'qr'));
     }
 
     public function controlPanel(Request $request) {

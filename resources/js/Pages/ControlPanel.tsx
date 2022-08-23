@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import Admin from "../Components/ControlPanel/Admin";
 import RoundController from "../Components/ControlPanel/RoundController";
 import WolfAttacks from "../Components/ControlPanel/WolfAttacks";
+import GameMeta from "../Components/Dashboard/GameMeta";
 import Guest from "../Layouts/Guest";
 import { updateAttack } from "../Redux/AttackSlice";
 import { updateGame } from "../Redux/GameSlice";
@@ -61,6 +62,7 @@ export default function ControlPanel(props: GameStateAPIType) {
     return (
         <Guest>
             <Head title="Control Panel" />
+            <GameMeta />
             <RoundController />
             <WolfAttacks />
             <Admin />

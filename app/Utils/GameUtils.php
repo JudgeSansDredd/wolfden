@@ -8,13 +8,17 @@ use App\Models\User;
 
 class GameUtils {
 
-    private static function getCurrentGame() {
-        if(!auth()->check()) {
+    private static function getCurrentGame($roomCode) {
+        if(empty($roomCode) && !auth()->check()) {
             return null;
         }
-        $user = User::find(auth()->user()->id);
-        $game = $user->games()->latest()->first();
-        return $game;
+
+        if(!empty($roomCode)) {
+            return Game::where('room_code', strtoupper($roomCode))->first();
+        } else {
+            $user = User::find(auth()->user()->id);
+            return $user->games()->latest()->first();
+        }
     }
 
     private static function getCurrentRound(?Game $game) {
@@ -31,10 +35,22 @@ class GameUtils {
         return $round->wolfAttacks()->latest()->first();
     }
 
-    public static function getCurrentAll() {
-        $game = self::getCurrentGame();
+    public static function getCurrentAll($roomCode = null) {
+        $game = self::getCurrentGame($roomCode);
         $round = self::getCurrentRound($game);
         $attack = self::getCurrentAttack($round);
         return compact('game', 'round', 'attack');
+    }
+
+    public static function generateRoomCode() {
+        $successful = false;
+        while(!$successful) {
+            $result = '';
+            for ($i=0; $i < 4; $i++) {
+                $result .= chr(rand(65,90));
+            }
+            $successful = Game::where('room_code', $result)->count() === 0;
+        }
+        return $result;
     }
 }

@@ -4,6 +4,7 @@ import { GameStateType } from "../Types/ReduxTypes";
 
 const initialState: GameStateType = {
     game_created: false,
+    room_code: null,
 };
 
 export const gameSlice = createSlice({
@@ -12,6 +13,8 @@ export const gameSlice = createSlice({
     reducers: {
         updateGame: (state, action: PayloadAction<GameAPIType | null>) => {
             state.game_created = action.payload !== null;
+            state.room_code =
+                action.payload !== null ? action.payload.room_code : null;
         },
     },
 });

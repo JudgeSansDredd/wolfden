@@ -15,4 +15,5 @@ export interface RoundStateType {
 
 export interface GameStateType {
     game_created: boolean;
+    room_code: string | null;
 }
